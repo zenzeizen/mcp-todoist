@@ -188,7 +188,8 @@ export const UPDATE_TASK_TOOL: Tool = {
         items: {
           type: "string",
         },
-        description: "Array of label names to assign to the task (optional)",
+        description:
+          "REPLACES all labels — does not append. Always pass the full label set including existing labels you want to keep (optional)",
       },
       deadline_date: {
         type: "string",
