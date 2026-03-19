@@ -130,9 +130,15 @@ export async function handleCreateTask(
 
     const taskData: TodoistTaskData = {
       content: sanitizedContent,
-      description: sanitizedDescription,
-      dueString: args.due_string,
     };
+
+    if (sanitizedDescription !== undefined) {
+      taskData.description = sanitizedDescription;
+    }
+
+    if (args.due_string) {
+      taskData.dueString = args.due_string;
+    }
 
     const apiPriority = toApiPriority(args.priority);
     if (apiPriority !== undefined) {
@@ -278,6 +284,9 @@ export async function handleGetTasks(
     if (args.project_id) {
       apiParams.projectId = args.project_id;
     }
+    if (args.section_id) {
+      apiParams.sectionId = args.section_id;
+    }
     if (args.label_id) {
       apiParams.label = args.label_id;
     }
@@ -305,6 +314,12 @@ export async function handleGetTasks(
   if (args.project_id) {
     filteredTasks = filteredTasks.filter(
       (task) => task.projectId === args.project_id
+    );
+  }
+
+  if (args.section_id) {
+    filteredTasks = filteredTasks.filter(
+      (task) => task.sectionId === args.section_id
     );
   }
 

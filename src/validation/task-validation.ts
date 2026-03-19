@@ -7,7 +7,7 @@ import {
 export function validateTaskContent(content: string): string {
   return validateAndSanitizeContent(content, "content", {
     maxLength: VALIDATION_LIMITS.TASK_CONTENT_MAX,
-    allowHtml: false,
+    allowHtml: true,
     required: true,
   });
 }

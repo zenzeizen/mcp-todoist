@@ -27,6 +27,7 @@ export function isGetTasksArgs(args: unknown): args is GetTasksArgs {
   const obj = args as Record<string, unknown>;
   return (
     (obj.project_id === undefined || typeof obj.project_id === "string") &&
+    (obj.section_id === undefined || typeof obj.section_id === "string") &&
     (obj.filter === undefined || typeof obj.filter === "string") &&
     (obj.label_id === undefined || typeof obj.label_id === "string") &&
     (obj.priority === undefined || typeof obj.priority === "number") &&

@@ -42,6 +42,7 @@ export interface CreateTaskArgs {
 export interface GetTasksArgs {
   task_id?: string;
   project_id?: string;
+  section_id?: string;
   filter?: string;
   label_id?: string;
   priority?: number;

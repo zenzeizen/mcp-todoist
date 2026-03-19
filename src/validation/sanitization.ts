@@ -23,25 +23,17 @@ export const VALIDATION_LIMITS = {
  * Patterns for detecting potentially malicious content
  */
 export const MALICIOUS_PATTERNS = [
-  // Script tags and javascript
+  // Script tags and javascript — only match actual HTML injection attempts
   /<script[^>]*>.*?<\/script>/gi,
   /javascript:/gi,
-  /on\w+\s*=/gi, // Event handlers like onclick, onload
-  // HTML injection
+  // HTML injection tags
   /<iframe[^>]*>/gi,
   /<object[^>]*>/gi,
   /<embed[^>]*>/gi,
-  /<form[^>]*>/gi,
   // Data URLs with potential scripts
   /data:text\/html/gi,
   /data:application\/javascript/gi,
-  // Suspicious protocols
   /vbscript:/gi,
-  /file:/gi,
-  // SQL injection patterns
-  /union\s+select/gi,
-  /'\s*(or|and)\s*'/gi,
-  /;\s*(drop|delete|insert|update)\s/gi,
 ];
 
 /**

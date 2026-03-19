@@ -94,6 +94,11 @@ export const GET_TASKS_TOOL: Tool = {
         type: "string",
         description: "Filter tasks by project ID (optional)",
       },
+      section_id: {
+        type: "string",
+        description:
+          "Filter tasks by section ID (optional, use with project_id to get tasks in a specific section)",
+      },
       label_id: {
         type: "string",
         description: "Filter tasks by label ID (optional)",

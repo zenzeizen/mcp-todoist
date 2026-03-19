@@ -73,7 +73,7 @@ export function validateDescription(description?: string): string | undefined {
 
   return validateAndSanitizeContent(description, "description", {
     maxLength: VALIDATION_LIMITS.DESCRIPTION_MAX,
-    allowHtml: false,
+    allowHtml: true,
     required: false,
   });
 }
@@ -84,7 +84,7 @@ export function validateDescription(description?: string): string | undefined {
 export function validateCommentContent(content: string): string {
   return validateAndSanitizeContent(content, "comment_content", {
     maxLength: VALIDATION_LIMITS.COMMENT_MAX,
-    allowHtml: false,
+    allowHtml: true,
     required: true,
   });
 }

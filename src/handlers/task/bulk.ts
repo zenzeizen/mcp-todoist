@@ -105,9 +105,14 @@ export async function handleBulkCreateTasks(
 
         const taskData: TodoistTaskData = {
           content: taskArgs.content,
-          description: taskArgs.description,
-          dueString: taskArgs.due_string,
         };
+
+        if (taskArgs.description !== undefined) {
+          taskData.description = taskArgs.description;
+        }
+        if (taskArgs.due_string) {
+          taskData.dueString = taskArgs.due_string;
+        }
 
         const apiPriority = toApiPriority(taskArgs.priority);
         if (apiPriority !== undefined) {
