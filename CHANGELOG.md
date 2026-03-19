@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3-fork.1] - 2026-03-19 (zenzeizen fork)
+
+### Fixed
+
+- **Stop HTML-escaping REST API payloads**: Content and description validation used `allowHtml: false`, encoding `/`, `&`, `"`, `'` as HTML entities. This mangled URLs and special characters in task content sent to the Todoist API, causing 400 errors when combining `description` + `due_string` in task creation
+- **Fix stateful regex bypass in pattern detection**: `MALICIOUS_PATTERNS` regexes used the `/g` flag, causing `.test()` to advance `lastIndex` across calls. On alternating requests, the same malicious input would pass validation. Removed the `g` flag
+- **Add content sanitization to update handlers**: `handleUpdateTask` and `handleBulkUpdateTasks` passed `content` and `description` directly to the API without running through `validateTaskContent`/`validateDescription`
+- **Remove false-positive XSS patterns**: Patterns `on\w+\s*=` (matched "on Monday ="), `file:` (matched "save to file:"), `<form>`, and SQL injection patterns silently stripped legitimate text from task descriptions. These are irrelevant for JSON payloads to a REST API
+- **Conditional payload construction**: Task create and bulk create handlers always included `description: undefined` and `dueString: undefined` in API payloads, which `axios-case-converter` could pass through as null values
+
+### Added
+
+- **`section_id` filter on `todoist_task_get`**: Filter tasks by section ID, passed through to the Todoist REST API and also applied as a client-side filter fallback
+- **`sectionId` in task display output**: `formatTaskForDisplay` now includes section ID when present
+- **`assignee_id` on create and update tools**: Existed in TypeScript types but was never wired into the tool schemas or handlers — task assignment in shared projects now works
+- **Labels replace warning on update tool**: Tool description now explicitly states that labels on update replace the full set, not append
+
 ## [1.0.3] - 2026-03-11
 
 ### Fixed
