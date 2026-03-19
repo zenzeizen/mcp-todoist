@@ -58,6 +58,11 @@ export const CREATE_TASK_TOOL: Tool = {
           "Duration unit: 'minute' or 'day'. Defaults to 'minute' if duration is provided. Duration requires due_string with a time (optional)",
         enum: ["minute", "day"],
       },
+      assignee_id: {
+        type: "string",
+        description:
+          "User ID to assign the task to (only works in shared projects, use todoist_project collaborators action to find IDs) (optional)",
+      },
       child_order: {
         type: "number",
         description:
@@ -196,6 +201,11 @@ export const UPDATE_TASK_TOOL: Tool = {
       section_id: {
         type: "string",
         description: "Move task to this section ID (optional)",
+      },
+      assignee_id: {
+        type: "string",
+        description:
+          "User ID to assign the task to (only works in shared projects) (optional)",
       },
       duration: {
         type: "number",

@@ -161,6 +161,11 @@ export async function handleCreateTask(
       taskData.sectionId = args.section_id;
     }
 
+    if (args.assignee_id) {
+      (taskData as unknown as Record<string, unknown>).assigneeId =
+        args.assignee_id;
+    }
+
     // Add duration support
     if (args.duration !== undefined) {
       taskData.duration = args.duration;
@@ -421,14 +426,20 @@ export async function handleUpdateTask(
     typeof args.section_id === "string" ? args.section_id : undefined;
 
   const updateData: Partial<TodoistTaskData> = {};
-  if (args.content) updateData.content = args.content;
-  if (args.description !== undefined) updateData.description = args.description;
+  if (args.content) updateData.content = validateTaskContent(args.content);
+  if (args.description !== undefined)
+    updateData.description = validateDescription(args.description);
   if (args.due_string) updateData.dueString = args.due_string;
   const apiPriorityUpdate = toApiPriority(args.priority);
   if (apiPriorityUpdate !== undefined) updateData.priority = apiPriorityUpdate;
   const labelsProvided = Object.prototype.hasOwnProperty.call(args, "labels");
   if (labelsProvided) {
     updateData.labels = Array.isArray(args.labels) ? args.labels : [];
+  }
+
+  if (args.assignee_id) {
+    (updateData as unknown as Record<string, unknown>).assigneeId =
+      args.assignee_id;
   }
 
   // Add duration support

@@ -9,6 +9,7 @@ import {
 import { CacheManager } from "../../cache/index.js";
 import {
   validateTaskContent,
+  validateDescription,
   validatePriority,
   validateDateString,
   validateLabels,
@@ -256,9 +257,10 @@ export async function handleBulkUpdateTasks(
     );
 
     const updateData: Partial<TodoistTaskData> = {};
-    if (args.updates.content) updateData.content = args.updates.content;
-    if (args.updates.description)
-      updateData.description = args.updates.description;
+    if (args.updates.content)
+      updateData.content = validateTaskContent(args.updates.content);
+    if (args.updates.description !== undefined)
+      updateData.description = validateDescription(args.updates.description);
     if (args.updates.due_string) updateData.dueString = args.updates.due_string;
     const apiPriority = toApiPriority(args.updates.priority);
     if (apiPriority !== undefined) updateData.priority = apiPriority;

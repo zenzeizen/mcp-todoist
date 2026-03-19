@@ -24,16 +24,16 @@ export const VALIDATION_LIMITS = {
  */
 export const MALICIOUS_PATTERNS = [
   // Script tags and javascript — only match actual HTML injection attempts
-  /<script[^>]*>.*?<\/script>/gi,
-  /javascript:/gi,
+  /<script[^>]*>.*?<\/script>/i,
+  /javascript:/i,
   // HTML injection tags
-  /<iframe[^>]*>/gi,
-  /<object[^>]*>/gi,
-  /<embed[^>]*>/gi,
+  /<iframe[^>]*>/i,
+  /<object[^>]*>/i,
+  /<embed[^>]*>/i,
   // Data URLs with potential scripts
-  /data:text\/html/gi,
-  /data:application\/javascript/gi,
-  /vbscript:/gi,
+  /data:text\/html/i,
+  /data:application\/javascript/i,
+  /vbscript:/i,
 ];
 
 /**
