@@ -118,6 +118,7 @@ export function formatTaskForDisplay(task: {
   priority?: number;
   labels?: string[];
   assigneeId?: string | null;
+  sectionId?: string | null;
   assignedByUid?: string | null;
   responsibleUid?: string | null;
 }): string {
@@ -136,7 +137,7 @@ export function formatTaskForDisplay(task: {
     task.labels && task.labels.length > 0
       ? `\n  Labels: ${task.labels.join(", ")}`
       : ""
-  }${assigneeDisplay ? `\n  Assigned To (User ID): ${assigneeDisplay}` : ""}${
+  }${task.sectionId ? `\n  Section ID: ${task.sectionId}` : ""}${assigneeDisplay ? `\n  Assigned To (User ID): ${assigneeDisplay}` : ""}${
     assignedByDisplay ? `\n  Assigned By (User ID): ${assignedByDisplay}` : ""
   }`;
 }
