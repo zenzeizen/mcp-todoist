@@ -21,7 +21,6 @@ import {
 import type { DurationUnit } from "../../types/index.js";
 import {
   resolveProjectIdentifier,
-  extractArrayFromResponse,
 } from "../../utils/api-helpers.js";
 import { getDueDateOnly } from "../../utils/datetime-utils.js";
 import { toApiPriority } from "../../utils/priority-mapper.js";
@@ -34,6 +33,29 @@ const taskCache = cacheManager.getOrCreateCache<TodoistTask[]>("tasks", 30000, {
   enableStats: true,
   enableAccessTracking: true,
 });
+
+/**
+ * Fetches all tasks by paginating through cursor-based results.
+ * The Todoist API v1 returns paginated responses; calling getTasks() once
+ * only returns the first page. This function follows nextCursor until all
+ * tasks have been retrieved.
+ */
+async function getAllTasks(todoistClient: TodoistApi): Promise<TodoistTask[]> {
+  const allTasks: TodoistTask[] = [];
+  let cursor: string | null | undefined;
+  do {
+    const args: { cursor?: string } = {};
+    if (cursor) {
+      args.cursor = cursor;
+    }
+    const response = await todoistClient.getTasks(args);
+    const page = response?.results ?? [];
+    allTasks.push(...page);
+    cursor = response?.nextCursor;
+  } while (cursor);
+  return allTasks;
+}
+
 
 /**
  * Filters tasks based on search criteria for bulk operations.
@@ -219,8 +241,7 @@ export async function handleBulkUpdateTasks(
 
     validateBulkSearchCriteria(args.search_criteria);
 
-    const result = await todoistClient.getTasks();
-    const allTasks = extractArrayFromResponse<TodoistTask>(result);
+    const allTasks = await getAllTasks(todoistClient);
     const matchingTasks = filterTasksByCriteria(allTasks, args.search_criteria);
 
     if (matchingTasks.length === 0) {
@@ -373,8 +394,7 @@ export async function handleBulkDeleteTasks(
 
     validateBulkSearchCriteria(args.search_criteria);
 
-    const result = await todoistClient.getTasks();
-    const allTasks = extractArrayFromResponse<TodoistTask>(result);
+    const allTasks = await getAllTasks(todoistClient);
     const matchingTasks = filterTasksByCriteria(allTasks, args.search_criteria);
 
     if (matchingTasks.length === 0) {
@@ -431,8 +451,7 @@ export async function handleBulkCompleteTasks(
 
     validateBulkSearchCriteria(args.search_criteria);
 
-    const result = await todoistClient.getTasks();
-    const allTasks = extractArrayFromResponse<TodoistTask>(result);
+    const allTasks = await getAllTasks(todoistClient);
     const matchingTasks = filterTasksByCriteria(allTasks, args.search_criteria);
 
     if (matchingTasks.length === 0) {

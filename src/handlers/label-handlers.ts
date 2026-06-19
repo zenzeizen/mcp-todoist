@@ -77,7 +77,7 @@ export async function handleCreateLabel(
   try {
     const label = await todoistClient.addLabel({
       name: validatedData.name,
-      color: validatedData.color,
+      color: validatedData.color as Parameters<typeof todoistClient.addLabel>[0]["color"],
       order: validatedData.order,
       isFavorite: validatedData.is_favorite,
     });
@@ -157,7 +157,7 @@ export async function handleUpdateLabel(
   try {
     await todoistClient.updateLabel(label.id, {
       name: validatedUpdates.name,
-      color: validatedUpdates.color,
+      color: validatedUpdates.color as Parameters<typeof todoistClient.updateLabel>[1]["color"],
       order: validatedUpdates.order,
       isFavorite: validatedUpdates.is_favorite,
     });

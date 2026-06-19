@@ -179,8 +179,8 @@ export class DryRunWrapper {
       childOrder: args.order || 1,
       content: args.content,
       description: args.description || "",
-      noteCount: 0,
       dayOrder: 1,
+      isUncompletable: false,
       isCollapsed: false,
     };
 

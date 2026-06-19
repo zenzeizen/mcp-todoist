@@ -160,7 +160,7 @@ export async function handleCreateProject(
     ...(args.description && { description: args.description }),
   };
 
-  const project = await todoistClient.addProject(projectDataWithDescription);
+  const project = await todoistClient.addProject(projectDataWithDescription as Parameters<typeof todoistClient.addProject>[0]);
 
   // Clear projects cache after creation
   cacheManager.clearAll();
