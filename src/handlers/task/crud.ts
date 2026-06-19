@@ -80,7 +80,13 @@ export async function findTaskByIdOrName(
     try {
       const response = await todoistClient.getTask(taskId);
       task = response as TodoistTask;
-    } catch {
+    } catch (error: unknown) {
+      // Only a genuine 404 means the task is absent. Re-throw real failures
+      // (auth/rate-limit/network/5xx) instead of silently degrading to a
+      // name search or a false "not found".
+      if (error instanceof Error && !/\b404\b|not found/i.test(error.message)) {
+        throw error;
+      }
       // If not found by ID, continue to try by name if provided
       if (!taskName) {
         ErrorHandler.handleTaskNotFound(`ID: ${taskId}`);
@@ -241,8 +247,14 @@ export async function handleGetTasks(
     try {
       const task = await todoistClient.getTask(args.task_id);
       return formatTaskForDisplay(task as TodoistTask);
-    } catch {
-      return `Task with ID "${args.task_id}" not found`;
+    } catch (error: unknown) {
+      // Only map a genuine 404 to "not found"; surface any other failure
+      // (auth/rate-limit/network/5xx) so callers don't treat an error as
+      // proof the task is gone.
+      if (error instanceof Error && /\b404\b|not found/i.test(error.message)) {
+        return `Task with ID "${args.task_id}" not found`;
+      }
+      throw error;
     }
   }
 
