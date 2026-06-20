@@ -68,7 +68,7 @@ function taskToDuplicateTask(
     due: task.due?.string ?? task.due?.date ?? undefined,
     priority: task.priority,
     labels: task.labels,
-    isCompleted: task.isCompleted,
+    isCompleted: task.checked,
   };
 }
 
@@ -106,7 +106,7 @@ export async function handleFindDuplicates(
   }
 
   if (!args.include_completed) {
-    tasks = tasks.filter((t) => !t.isCompleted);
+    tasks = tasks.filter((t) => !t.checked);
   }
 
   if (tasks.length < 2) {

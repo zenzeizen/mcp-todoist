@@ -102,7 +102,12 @@ async function findLabel(
     try {
       const label = await todoistClient.getLabel(args.label_id);
       return label as TodoistLabel;
-    } catch {
+    } catch (error: unknown) {
+      // Only a genuine 404 means the label is absent; surface real failures
+      // (auth/rate-limit/network/5xx) instead of masking them as "not found".
+      if (error instanceof Error && !/\b404\b|not found/i.test(error.message)) {
+        throw error;
+      }
       throw new LabelNotFoundError(`Label with ID ${args.label_id} not found`);
     }
   }
