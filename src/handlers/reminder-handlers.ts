@@ -110,7 +110,12 @@ async function findTask(
     try {
       const task = await todoistClient.getTask(taskId);
       return { id: task.id, content: task.content };
-    } catch {
+    } catch (error: unknown) {
+      // Only a genuine 404 means the task is absent; surface real failures
+      // (auth/rate-limit/network/5xx) instead of masking them as "not found".
+      if (error instanceof Error && !/\b404\b|not found/i.test(error.message)) {
+        throw error;
+      }
       throw new TaskNotFoundError(`Task with ID ${taskId} not found`);
     }
   }

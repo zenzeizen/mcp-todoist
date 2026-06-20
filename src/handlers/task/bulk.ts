@@ -21,6 +21,7 @@ import {
 import type { DurationUnit } from "../../types/index.js";
 import {
   resolveProjectIdentifier,
+  extractArrayFromResponse,
 } from "../../utils/api-helpers.js";
 import { getDueDateOnly } from "../../utils/datetime-utils.js";
 import { toApiPriority } from "../../utils/priority-mapper.js";
@@ -49,7 +50,7 @@ async function getAllTasks(todoistClient: TodoistApi): Promise<TodoistTask[]> {
       args.cursor = cursor;
     }
     const response = await todoistClient.getTasks(args);
-    const page = response?.results ?? [];
+    const page = extractArrayFromResponse<TodoistTask>(response);
     allTasks.push(...page);
     cursor = response?.nextCursor;
   } while (cursor);

@@ -98,12 +98,25 @@ export async function findTaskByIdOrName(
   if (!task && taskName) {
     const result = await todoistClient.getTasks();
     const tasks = extractArrayFromResponse<TodoistTask>(result);
-    const matchingTask = tasks.find((t: TodoistTask) =>
-      t.content.toLowerCase().includes(taskName.toLowerCase())
+    const needle = taskName.toLowerCase();
+    // Prefer an exact (case-insensitive) match; fall back to substring matches.
+    // Refuse to silently mutate the wrong task when the name is ambiguous.
+    const exact = tasks.filter(
+      (t: TodoistTask) => t.content.toLowerCase() === needle
     );
+    const candidates =
+      exact.length > 0
+        ? exact
+        : tasks.filter((t: TodoistTask) =>
+            t.content.toLowerCase().includes(needle)
+          );
 
-    if (matchingTask) {
-      task = matchingTask;
+    if (candidates.length === 1) {
+      task = candidates[0];
+    } else if (candidates.length > 1) {
+      throw new ValidationError(
+        `Ambiguous task name "${taskName}" matches ${candidates.length} tasks. Use task_id to disambiguate.`
+      );
     } else {
       ErrorHandler.handleTaskNotFound(taskName);
     }

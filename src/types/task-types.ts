@@ -162,6 +162,9 @@ export interface TodoistTask {
   sectionId?: string | null;
   parentId?: string | null;
   isCompleted?: boolean;
+  // The SDK runtime object exposes completion via these fields, not isCompleted.
+  checked?: boolean;
+  completedAt?: string | null;
   duration?: TaskDuration | null;
 }
 
