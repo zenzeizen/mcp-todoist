@@ -12,10 +12,13 @@ import {
   TodoistAPIError,
 } from "../errors.js";
 import { validateLabelData, validateLabelUpdate } from "../validation.js";
-import { SimpleCache } from "../cache.js";
+import { SimpleCache, CacheManager } from "../cache.js";
 
 // Cache for label data (30 second TTL)
-const labelCache = new SimpleCache<TodoistLabel[]>(30000);
+const cacheManager = CacheManager.getInstance();
+// Shared "labels" cache instance (the same one crud's label resolution uses),
+// so a label create/update/delete here invalidates that read path too.
+const labelCache = cacheManager.getOrCreateCache<TodoistLabel[]>("labels", 30000);
 const labelStatsCache = new SimpleCache<LabelStatistics[]>(30000);
 
 interface ApiResponse {
