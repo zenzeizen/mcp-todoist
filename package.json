@@ -45,8 +45,8 @@
   },
   "homepage": "https://github.com/greirson/mcp-todoist#readme",
   "dependencies": {
+    "@doist/todoist-api-typescript": "^7.3.0",
     "@modelcontextprotocol/sdk": "^1.25.2",
-    "@doist/todoist-api-typescript": "^5.5.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

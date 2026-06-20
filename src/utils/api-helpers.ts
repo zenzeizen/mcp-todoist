@@ -121,6 +121,8 @@ export function formatTaskForDisplay(task: {
   sectionId?: string | null;
   assignedByUid?: string | null;
   responsibleUid?: string | null;
+  checked?: boolean;
+  completedAt?: string | null;
 }): string {
   const displayPriority = fromApiPriority(task.priority);
   const dueDetails = formatDueDetails(
@@ -129,9 +131,15 @@ export function formatTaskForDisplay(task: {
   // Show assignment info (responsibleUid is the Todoist API field for assigned user)
   const assigneeDisplay = task.responsibleUid || task.assigneeId;
   const assignedByDisplay = task.assignedByUid;
+  const isRecurring = (task.due as TodoistTaskDueData | null | undefined)
+    ?.isRecurring;
   return `- ${task.content}${task.id ? ` (ID: ${task.id})` : ""}${
+    task.checked
+      ? `\n  Status: ✓ Completed${task.completedAt ? ` (${task.completedAt})` : ""}`
+      : ""
+  }${
     task.description ? `\n  Description: ${task.description}` : ""
-  }${dueDetails ? `\n  Due: ${dueDetails}` : ""}${
+  }${dueDetails ? `\n  Due: ${dueDetails}${isRecurring ? " (recurring)" : ""}` : ""}${
     task.deadline ? `\n  Deadline: ${task.deadline.date}` : ""
   }${displayPriority ? `\n  Priority: ${displayPriority}` : ""}${
     task.labels && task.labels.length > 0
